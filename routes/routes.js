@@ -2,10 +2,12 @@ const express = require('express');
 const Router = express();
 
 // Controllers
-
+const SendLoginData = require('../controllers/SendLoginData');
 
 //Middleware
-const ensureauth = require('../middlewares/ensureAuthenticated');
+
+//Routes
+Router.post('/send/login/data', SendLoginData.SendLoginData);
 
 
 
