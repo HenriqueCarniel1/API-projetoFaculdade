@@ -1,5 +1,5 @@
 
-const db = require('../database/bd');
+const db = require('../db/db');
 const bcrypt = require('bcrypt');
 
 let validateEmptyFields = ({ RegisterName, RegisterEmail, RegisterPassword }) => {

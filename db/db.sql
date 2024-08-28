@@ -1,163 +1,157 @@
--- BANCO DE DADOS PARA O PROJETO DE HUB MANUFATURADOS FEITO EM MYSQL --
+-- Active: 1724873982032@@aws-0-sa-east-1.pooler.supabase.com@6543@postgres
+-- BANCO DE DADOS PARA O PROJETO DE HUB MANUFATURADOS FEITO EM POSTGRESQL --
 
-show databases;
-create database projetoFaculdade;
-show tables;
-use projetoFaculdade;
-DROP TABLE ENDERECO;
+-- Criação do banco de dados --
+-- Use um cliente PostgreSQL para criar o banco de dados --
+-- CREATE DATABASE projetoFaculdade;
 
--- Criando tabela endereço --
+\c projetoFaculdade
+
+-- Remover tabelas existentes se houver --
+DROP TABLE IF EXISTS Endereco CASCADE;
+DROP TABLE IF EXISTS Telefone CASCADE;
+DROP TABLE IF EXISTS Cliente CASCADE;
+DROP TABLE IF EXISTS Pedido CASCADE;
+DROP TABLE IF EXISTS Item_produto CASCADE;
+DROP TABLE IF EXISTS Produto CASCADE;
+DROP TABLE IF EXISTS Avaliacao CASCADE;
+DROP TABLE IF EXISTS Vendedor CASCADE;
+DROP TABLE IF EXISTS Avaliacao_vendedor CASCADE;
+DROP TABLE IF EXISTS Telefone_vendedor CASCADE;
+
+-- Criando tabela Endereco --
 CREATE TABLE Endereco (
-    idendereco INT PRIMARY KEY AUTO_INCREMENT,
+    idendereco SERIAL PRIMARY KEY,
     CEP CHAR(8) NOT NULL,
     BAIRRO VARCHAR(50) NOT NULL,
     CIDADE VARCHAR(50) NOT NULL,
     COMPLEMENTO VARCHAR(50),
-    ID_CLIENTE INT NOT NULL
-);
-DROP TABLE TELEFONE;
-
-
--- Criando tabela telefone do cliente--
-CREATE TABLE Telefone(
-    IDTELEFONE INT PRIMARY KEY AUTO_INCREMENT,
-    TIPO ENUM('Telefone_Cel', 'Telefone_Com', 'Telefone_Res') NOT NULL,
-    NUMERO_TEL CHAR(11),
-    ID_CLIENTE INT NOT NULL
+    id_cliente INT NOT NULL
 );
 
+-- Criando tabela Telefone do cliente --
+CREATE TABLE Telefone (
+    idtelefone SERIAL PRIMARY KEY,
+    tipo TELEFONE_TIPO NOT NULL,
+    numero_tel CHAR(11),
+    id_cliente INT NOT NULL
+);
 
--- Criando tabela cliente --
-DROP TABLE CLIENTE;
+-- Criando tipo ENUM para o Telefone --
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'telefone_tipo') THEN
+        CREATE TYPE TELEFONE_TIPO AS ENUM ('Telefone_Cel', 'Telefone_Com', 'Telefone_Res');
+    END IF;
+END $$;
+
+-- Criando tabela Cliente --
 CREATE TABLE Cliente (
-    IDCLIENTE INT PRIMARY KEY AUTO_INCREMENT,
-    NOME VARCHAR(50) NOT NULL,
-    EMAIL VARCHAR(50) NOT NULL UNIQUE,
-    DATA_DE_NASCIMENTO DATE NOT NULL,
-    SENHA VARCHAR(100) NOT NULL,
-    CPF CHAR(11) NOT NULL
+    idcliente SERIAL PRIMARY KEY,
+    nome VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    data_de_nascimento DATE NOT NULL,
+    senha VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL
 );
-DROP TABLE Pedido;
 
-
--- Criando tabela pedido --
+-- Criando tabela Pedido --
 CREATE TABLE Pedido (
-    IDPEDIDO INT PRIMARY KEY AUTO_INCREMENT,
-    NUMERO INT UNIQUE NOT NULL,
-    VALOR_TOTAL INT NOT NULL,
-    DATA_DO_PEDIDO DATE NOT NULL,
-    QUANTIDADE INT NOT NULL,
-    ID_CLIENTE INT NOT NULL,
-    ID_VENDEDOR INT NOT NULL
+    idpedido SERIAL PRIMARY KEY,
+    numero INT UNIQUE NOT NULL,
+    valor_total INT NOT NULL,
+    data_do_pedido DATE NOT NULL,
+    quantidade INT NOT NULL,
+    id_cliente INT NOT NULL,
+    id_vendedor INT NOT NULL
 );
-DROP TABLE ITEM_PRODUTO;
-
 
 -- Criando tabela Item_produto --
 CREATE TABLE Item_produto (
-    quantidade int NOT NULL,
-    preco_unitario decimal(10,2) NOT NULL,
-    valor_total decimal(10,2) NOT NULL,
-    id_pedido int,
-    id_produto int,
+    quantidade INT NOT NULL,
+    preco_unitario DECIMAL(10,2) NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
+    id_pedido INT,
+    id_produto INT,
     PRIMARY KEY (id_pedido, id_produto)
 );
 
-
-DROP TABLE Produto;
-
-
--- Criando tabela produto --
+-- Criando tabela Produto --
 CREATE TABLE Produto (
-    IDPRODUTO INT PRIMARY KEY AUTO_INCREMENT,
-    DATA_DE_ENTREGA DATE NOT NULL,
-    DESCRICAO VARCHAR(80),
-    NOME VARCHAR(30) NOT NULL
+    idproduto SERIAL PRIMARY KEY,
+    data_de_entrega DATE NOT NULL,
+    descricao VARCHAR(80),
+    nome VARCHAR(30) NOT NULL
 );
 
-
-DROP TABLE Avaliacao;
-
-
--- Criando tabela avaliação do produto --
+-- Criando tabela Avaliacao do produto --
 CREATE TABLE Avaliacao (
-    IDAVALIACAO INT PRIMARY KEY AUTO_INCREMENT,
-    DATA DATE NOT NULL,
-    CLASSIFICACAO CHAR(5) NOT NULL,
-    QUANTIDADE INT NOT NULL,
-    DESCRICAO VARCHAR(80),
-    ID_PRODUTO INT NOT NULL
+    idavaliacao SERIAL PRIMARY KEY,
+    data DATE NOT NULL,
+    classificacao CHAR(5) NOT NULL,
+    quantidade INT NOT NULL,
+    descricao VARCHAR(80),
+    id_produto INT NOT NULL
 );
 
-
-DROP TABLE Vendedor;
-
-
--- Criando tabela vendedor --
+-- Criando tabela Vendedor --
 CREATE TABLE Vendedor (
-    IDVENDEDOR INT PRIMARY KEY AUTO_INCREMENT,
-    NOME VARCHAR(30) NOT NULL,
-    IDADE DECIMAL(4) NOT NULL,
-    CPF CHAR(11) NOT NULL
+    idvendedor SERIAL PRIMARY KEY,
+    nome VARCHAR(30) NOT NULL,
+    idade DECIMAL(4) NOT NULL,
+    cpf CHAR(11) NOT NULL
 );
-DROP TABLE AVALIACAO_VENDEDOR;
 
-
--- Criando tabela avaliação do vendedor --
+-- Criando tabela Avaliacao_vendedor --
 CREATE TABLE Avaliacao_vendedor (
-    IDAVALIACAO INT PRIMARY KEY AUTO_INCREMENT,
-    DESCRICAO VARCHAR(80),
-    NUMERO CHAR(5),
-    ID_VENDEDOR INT NOT NULL
+    idavaliacao SERIAL PRIMARY KEY,
+    descricao VARCHAR(80),
+    numero CHAR(5),
+    id_vendedor INT NOT NULL
 );
 
-
-DROP TABLE TELEFONE_VENDEDOR;
-
-
--- Criando tabela telefoe do vendedor --
-CREATE TABLE TELEFONE_VENDEDOR (
-    IDTELEFONE INT PRIMARY KEY AUTO_INCREMENT,
-    TIPO ENUM('Telefone_Cel', 'Telefone_Com', 'Telefone_Res') NOT NULL,
-    NUMERO CHAR(11) NOT NULL,
-    ID_VENDEDOR INT NOT NULL
+-- Criando tabela Telefone_vendedor --
+CREATE TABLE Telefone_vendedor (
+    idtelefone SERIAL PRIMARY KEY,
+    tipo TELEFONE_TIPO NOT NULL,
+    numero CHAR(11) NOT NULL,
+    id_vendedor INT NOT NULL
 );
 
+-- Adicionando constraints --
 
--- adicionando constraints --
+ALTER TABLE Endereco
+ADD CONSTRAINT FK_cliente_endereco
+FOREIGN KEY (id_cliente) REFERENCES Cliente(idcliente);
 
+ALTER TABLE Telefone
+ADD CONSTRAINT FK_cliente_telefone
+FOREIGN KEY (id_cliente) REFERENCES Cliente(idcliente);
 
-alter table endereco add constraint FK_cliente_endereco
-Foreign Key (id_cliente) REFERENCES cliente(idcliente);
+ALTER TABLE Pedido
+ADD CONSTRAINT FK_pedido_cliente
+FOREIGN KEY (id_cliente) REFERENCES Cliente(idcliente);
 
+ALTER TABLE Pedido
+ADD CONSTRAINT FK_pedido_vendedor
+FOREIGN KEY (id_vendedor) REFERENCES Vendedor(idvendedor);
 
-alter table telefone add constraint FK_cliente_telefone
-Foreign Key (id_cliente) REFERENCES cliente(idcliente);
+ALTER TABLE Telefone_vendedor
+ADD CONSTRAINT FK_telefone_vendedor
+FOREIGN KEY (id_vendedor) REFERENCES Vendedor(idvendedor);
 
+ALTER TABLE Avaliacao_vendedor
+ADD CONSTRAINT FK_avaliacao_vendedor_vendedor
+FOREIGN KEY (id_vendedor) REFERENCES Vendedor(idvendedor);
 
-alter table pedido add constraint FK_pedido_cliente
-Foreign Key (id_cliente) REFERENCES cliente(idcliente);
+ALTER TABLE Item_produto
+ADD CONSTRAINT FK_Item_produto_pedido
+FOREIGN KEY (id_pedido) REFERENCES Pedido(idpedido);
 
+ALTER TABLE Item_produto
+ADD CONSTRAINT FK_Item_produto_produto
+FOREIGN KEY (id_produto) REFERENCES Produto(idproduto);
 
-alter table pedido add constraint Fk_pedido_vendedor
-foreign key (id_vendedor) references vendedor(idvendedor);
-
-
-alter table telefone_vendedor add constraint Fk_telefone_vendedor
-foreign key (id_vendedor) references vendedor(idvendedor);
-
-
-alter table avaliacao_vendedor add constraint Fk_avaliacao_vendedor_vendedor
-foreign key (id_vendedor) references vendedor(idvendedor);
-
-
-alter table Item_produto add constraint Fk_Item_produto_pedido
-foreign key (id_pedido) references pedido(idpedido);
-
-
-alter table Item_produto add constraint Fk_Item_produto_produto
-foreign key (id_produto) references produto(idproduto);
-
-
-alter table avaliacao add constraint Fk_produto_avaiacao
-foreign key (id_produto) references produto(idproduto);
+ALTER TABLE Avaliacao
+ADD CONSTRAINT FK_produto_avaliacao
+FOREIGN KEY (id_produto) REFERENCES Produto(idproduto);
