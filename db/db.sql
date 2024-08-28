@@ -8,16 +8,24 @@
 \c projetoFaculdade
 
 -- Remover tabelas existentes se houver --
-DROP TABLE IF EXISTS Endereco CASCADE;
-DROP TABLE IF EXISTS Telefone CASCADE;
-DROP TABLE IF EXISTS Cliente CASCADE;
-DROP TABLE IF EXISTS Pedido CASCADE;
+DROP TABLE IF EXISTS Telefone_vendedor CASCADE;
+DROP TABLE IF EXISTS Avaliacao_vendedor CASCADE;
+DROP TABLE IF EXISTS Vendedor CASCADE;
+DROP TABLE IF EXISTS Avaliacao CASCADE;
 DROP TABLE IF EXISTS Item_produto CASCADE;
 DROP TABLE IF EXISTS Produto CASCADE;
-DROP TABLE IF EXISTS Avaliacao CASCADE;
-DROP TABLE IF EXISTS Vendedor CASCADE;
-DROP TABLE IF EXISTS Avaliacao_vendedor CASCADE;
-DROP TABLE IF EXISTS Telefone_vendedor CASCADE;
+DROP TABLE IF EXISTS Pedido CASCADE;
+DROP TABLE IF EXISTS Telefone CASCADE;
+DROP TABLE IF EXISTS Endereco CASCADE;
+DROP TABLE IF EXISTS Cliente CASCADE;
+
+-- Criando tipo ENUM para o Telefone --
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'telefone_tipo') THEN
+        CREATE TYPE telefone_tipo AS ENUM ('Telefone_Cel', 'Telefone_Com', 'Telefone_Res');
+    END IF;
+END $$;
 
 -- Criando tabela Endereco --
 CREATE TABLE Endereco (
@@ -32,18 +40,10 @@ CREATE TABLE Endereco (
 -- Criando tabela Telefone do cliente --
 CREATE TABLE Telefone (
     idtelefone SERIAL PRIMARY KEY,
-    tipo TELEFONE_TIPO NOT NULL,
+    tipo telefone_tipo NOT NULL,
     numero_tel CHAR(11),
     id_cliente INT NOT NULL
 );
-
--- Criando tipo ENUM para o Telefone --
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'telefone_tipo') THEN
-        CREATE TYPE TELEFONE_TIPO AS ENUM ('Telefone_Cel', 'Telefone_Com', 'Telefone_Res');
-    END IF;
-END $$;
 
 -- Criando tabela Cliente --
 CREATE TABLE Cliente (
@@ -59,7 +59,7 @@ CREATE TABLE Cliente (
 CREATE TABLE Pedido (
     idpedido SERIAL PRIMARY KEY,
     numero INT UNIQUE NOT NULL,
-    valor_total INT NOT NULL,
+    valor_total DECIMAL(10,2) NOT NULL,
     data_do_pedido DATE NOT NULL,
     quantidade INT NOT NULL,
     id_cliente INT NOT NULL,
@@ -98,7 +98,7 @@ CREATE TABLE Avaliacao (
 CREATE TABLE Vendedor (
     idvendedor SERIAL PRIMARY KEY,
     nome VARCHAR(30) NOT NULL,
-    idade DECIMAL(4) NOT NULL,
+    idade INT NOT NULL,
     cpf CHAR(11) NOT NULL
 );
 
@@ -113,7 +113,7 @@ CREATE TABLE Avaliacao_vendedor (
 -- Criando tabela Telefone_vendedor --
 CREATE TABLE Telefone_vendedor (
     idtelefone SERIAL PRIMARY KEY,
-    tipo TELEFONE_TIPO NOT NULL,
+    tipo telefone_tipo NOT NULL,
     numero CHAR(11) NOT NULL,
     id_vendedor INT NOT NULL
 );
