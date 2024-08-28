@@ -7,7 +7,8 @@ const SendLoginData = require('../controllers/SendLoginData');
 //Middleware
 
 //Routes
-Router.post('/send/login/data', SendLoginData.SendLoginData);
+Router.post('/send/login/user', SendLoginData.SendLoginData);
+Router.post('/send/register/user', SendLoginData.SendLoginData);
 
 
 

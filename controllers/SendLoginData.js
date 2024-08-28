@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const jwtData = require('../auth/auth');
-const db = require('../database/bd');
+const db = require('../db/db');
 const bcrypt = require('bcrypt');
 
 let validateEmptyFields = ({ LoginEmail, LoginPassword }) => {
