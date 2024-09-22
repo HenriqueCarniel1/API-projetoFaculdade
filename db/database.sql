@@ -1,4 +1,4 @@
--- Active: 1724873982032@@aws-0-sa-east-1.pooler.supabase.com@6543@postgres
+-- Active: 1727040477672@@localhost@5432@postgres
 -- BANCO DE DADOS PARA O PROJETO DE HUB MANUFATURADOS FEITO EM POSTGRESQL --
 
 -- Criação do banco de dados --
@@ -155,3 +155,56 @@ FOREIGN KEY (id_produto) REFERENCES Produto(idproduto);
 ALTER TABLE Avaliacao
 ADD CONSTRAINT FK_produto_avaliacao
 FOREIGN KEY (id_produto) REFERENCES Produto(idproduto);
+
+
+INSERT INTO Cliente (nome, email, data_de_nascimento, senha, cpf)
+VALUES 
+('Gustavo Henrique', 'gustavo@example.com', '2000-01-01', 'senhaSegura123', '12345678901'),
+('Maria Silva', 'maria.silva@example.com', '1990-05-12', 'senhaMaria2023', '98765432100'),
+('teste', 'teste@gmail.com', '1990-05-12', '123', '98765432100');
+
+INSERT INTO Endereco (CEP, Bairro, Cidade, Complemento, id_cliente)
+VALUES
+('70000000', 'Asa Norte', 'Brasília', 'Apt 101', 1),
+('70000001', 'Asa Sul', 'Brasília', 'Casa 2', 2);
+
+INSERT INTO Telefone (tipo, numero_tel, id_cliente)
+VALUES
+('Telefone_Cel', '61999999999', 1),
+('Telefone_Com', '61333333333', 2);
+
+INSERT INTO Vendedor (nome, idade, cpf)
+VALUES
+('João Vendedor', 35, '11111111111'),
+('Pedro Vendedor', 42, '22222222222');
+
+INSERT INTO Telefone_vendedor (tipo, numero, id_vendedor)
+VALUES
+('Telefone_Cel', '61888888888', 1),
+('Telefone_Com', '61444444444', 2);
+
+INSERT INTO Produto (data_de_entrega, descricao, nome)
+VALUES
+('2024-09-30', 'Produto Eletrônico', 'Smartphone'),
+('2024-10-05', 'Produto Doméstico', 'Geladeira');
+
+INSERT INTO Pedido (numero, valor_total, data_do_pedido, quantidade, id_cliente, id_vendedor)
+VALUES
+(1001, 2000.50, '2024-09-21', 2, 1, 1),
+(1002, 3000.00, '2024-09-22', 1, 2, 2);
+
+INSERT INTO Item_produto (quantidade, preco_unitario, valor_total, id_pedido, id_produto)
+VALUES
+(1, 1000.25, 2000.50, 1, 1),
+(1, 3000.00, 3000.00, 2, 2);
+
+INSERT INTO Avaliacao (data, classificacao, quantidade, descricao, id_produto)
+VALUES
+('2024-09-22', '5', 100, 'Ótimo produto!', 1),
+('2024-09-23', '4', 50, 'Bom, mas pode melhorar.', 2);
+
+INSERT INTO Avaliacao_vendedor (descricao, numero, id_vendedor)
+VALUES
+('Muito atencioso', '5', 1),
+('Entrega rápida', '4', 2);
+

@@ -8,7 +8,7 @@ exports.getTodosProdutos = (req, res) => {
             console.error(err);
             return res.status(500).json({ error: "Erro ao buscar produtos" });
         }
-        if (result) {
+        if (result.rows.length > 0) {
             return res.status(200).json(result.rows);
         } else {
             return res.status(404).json({ error: "Nenhum produto encontrado" });
