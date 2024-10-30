@@ -21,7 +21,7 @@ class ProdutosController {
     getProdutoUnico(req, res) {
         const {idProduto} = req.params;
 
-        const sql = "SEELECT * FROM Produtos WHERE id = $1";
+        const sql = "SELECT * FROM produto WHERE idproduto = $1";
 
         db.query(sql, [idProduto], (err, result) => {
             if(err) {
