@@ -9,7 +9,11 @@ const db = new Pool({
   database: process.env.DB_NAME,
   ssl: {
     rejectUnauthorized: false,
+<<<<<<< HEAD
   }
+=======
+  },
+>>>>>>> master
 });
 
 module.exports = db;

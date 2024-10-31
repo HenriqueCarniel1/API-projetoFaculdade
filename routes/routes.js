@@ -13,5 +13,6 @@ Router.post('/send/register/user', usuarios.EnviarDadosRegistro);
 
 //Produtos
 Router.get('/get/produto', produtos.getTodosProdutos);
+Router.get('/get/produto/unico/:idProduto', produtos.getProdutoUnico);
 
 module.exports = Router;
