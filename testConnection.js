@@ -1,5 +1,5 @@
 require('dotenv').config();
-const db = require('./db/db'); // substitua com o caminho do seu arquivo de conexão
+const db = require('./db/db');
 
 async function testConnection() {
   try {
@@ -8,7 +8,7 @@ async function testConnection() {
   } catch (err) {
     console.error('Erro ao conectar ao banco de dados:', err);
   } finally {
-    db.end(); // Fecha a conexão após o teste
+    db.end();
   }
 }
 

@@ -1,3 +1,4 @@
+-- Active: 1730291805645@@127.0.0.1@5432
 -- Remover tabelas existentes se houver --
 DROP TABLE IF EXISTS Telefone_vendedor CASCADE;
 DROP TABLE IF EXISTS Avaliacao_vendedor CASCADE;
@@ -9,6 +10,7 @@ DROP TABLE IF EXISTS Pedido CASCADE;
 DROP TABLE IF EXISTS Telefone CASCADE;
 DROP TABLE IF EXISTS Endereco CASCADE;
 DROP TABLE IF EXISTS Cliente CASCADE;
+DROP TABLE IF EXISTS Ofertas CASCADE;
 
 -- Criando tipo ENUM para o Telefone --
 DO $$
@@ -75,6 +77,19 @@ CREATE TABLE Produto (
     ficha_tecnica TEXT,
     data_de_entrega DATE NOT NULL
 );
+
+-- Criando tabela Carrinho_Produto --
+CREATE TABLE Carrinho_Produto (
+    idcarrinho SERIAL PRIMARY KEY,
+    id_cliente INT NOT NULL,
+    id_produto INT NOT NULL,
+    data_adicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_carrinho_cliente FOREIGN KEY (id_cliente) REFERENCES Cliente(idcliente),
+    CONSTRAINT fk_carrinho_produto FOREIGN KEY (id_produto) REFERENCES Produto(idproduto)
+);
+
+-- Index para melhorar consultas no carrinho
+CREATE INDEX idx_carrinho_cliente_produto ON Carrinho_Produto (id_cliente, id_produto);
 
 -- Criando tabela Ofertas --
 CREATE TABLE Ofertas (
@@ -220,6 +235,9 @@ VALUES
 ('Bom atendimento', '5', 3),
 ('Ótimo vendedor', '5', 4);
 
+select *
+from produto;
+
 SELECT 
     p.nome,
     p.preco AS preco_original,
@@ -233,6 +251,4 @@ FROM
 JOIN 
     Produto p ON o.id_produto = p.idproduto
 WHERE 
-    o.data_validade >= CURRENT_DATE;  -- Filtra ofertas válidas a partir da data atual
-
-
+    o.data_validade >= CURRENT_DATE;

@@ -4,13 +4,13 @@ const jwt = require('jsonwebtoken');
 const jwtData = require('../auth/auth');
 
 class UsuariosController {
-    validarCamposVazios({ RegisterName, RegisterEmail, RegisterPassword, RegisterCpf, RegisterDateOfBirth }) {
+    validarCamposVazios = ({ RegisterName, RegisterEmail, RegisterPassword, RegisterCpf, RegisterDateOfBirth }) => {
         return RegisterName && RegisterEmail && RegisterPassword && RegisterCpf && RegisterDateOfBirth;
-    }
+    };
 
-    validarCamposVaziosLogin({ LoginEmail, LoginPassword }) {
+    validarCamposVaziosLogin = ({ LoginEmail, LoginPassword }) => {
         return LoginEmail && LoginPassword;
-    }
+    };
 
     async validarEmailExistenteNoBanco(RegisterEmail) {
         const sql = "SELECT * FROM Cliente WHERE email = $1";
@@ -42,7 +42,7 @@ class UsuariosController {
         });
     }
 
-    async EnviarDadosRegistro(req, res) {
+    EnviarDadosRegistro = async (req, res) => {
         const { RegisterName, RegisterEmail, RegisterPassword, RegisterCpf, RegisterDateOfBirth } = req.body;
 
         if (!this.validarCamposVazios(req.body)) {
@@ -73,9 +73,9 @@ class UsuariosController {
             console.log(err);
             return res.status(500).send("Erro no servidor");
         }
-    }
+    };
 
-    async EnviarDadosLogin(req, res) {
+    EnviarDadosLogin = async (req, res) => {
         const { LoginEmail, LoginPassword } = req.body;
 
         if (!this.validarCamposVaziosLogin(req.body)) {
@@ -105,7 +105,8 @@ class UsuariosController {
             console.log(err);
             return res.status(500).send("Erro no servidor");
         }
-    }
+    };
 }
 
 module.exports = new UsuariosController();
+
